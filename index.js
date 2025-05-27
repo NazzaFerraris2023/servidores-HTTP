@@ -13,19 +13,28 @@ app.use(express.json())
 
 // Contruyendo nuestro propio middlewere
 //Forma 1 => todo encapsulado ahi adentro // tiene que estar arriba de todo
-//Seguir en 1:34:16
-app.use((req,res,next) => {
+// app.use((req,res,next) => {
+//     // el next es obligatorio de usar, el req y res no
+//     console.log("El metodo es: ",req.method)
+
+//     //Si al req le quiero agregar una propiedad: 
+//     req.saludar = "Hola equipo"
+//     //Si no pongo el next() el servidor se queda procesando
+//     next()
+// }) // este middlewere va a afectar a los metodos de abajo
+
+//Forma 2: 
+const methodLogger = (req,res,next) => {
     // el next es obligatorio de usar, el req y res no
     console.log("El metodo es: ",req.method)
 
     //Si al req le quiero agregar una propiedad: 
-    req.saludar = "Hola equipo"
+    req.saludar = "Hola a todos"
     //Si no pongo el next() el servidor se queda procesando
     next()
-})
+}
 
-
-
+//app.use(methodLogger)
 
 
 
@@ -42,6 +51,7 @@ app.get("/", (req, res) => {
 //get by id => Si en el cliente trueno pongo localhost:8080/(cuelquier cosa) me va a traer el "get by id"
 // lo que devuelve request es un objeto, por lo tanto lo puedo ir modificando (conviene agregarle cosas)
 // Si hago un req.params puedo acceder directamente al objeto
+app.use(methodLogger)
 app.get("/:id", (req, res) => {
   res.status(200).send("get by id");
 //   console.log(req.params)
@@ -66,6 +76,7 @@ app.post("/", (req,res) =>{
 
 // app.use(express.urlencoded({extended : true}))
 // app.use(express.json())
+// para que afecte a las rutas que elija, lo tengo que poner por encima de la ruta (si quiero que afecte solo al /:id, pongo el middlewere dsp del get /, pero antes del get /:id)
 
 
 
